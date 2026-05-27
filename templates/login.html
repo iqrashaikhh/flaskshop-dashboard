@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Login - Premium Access</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.125);
+            --primary-glow: #8b5cf6;
+            --secondary-glow: #ec4899;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a; /* Deep Midnight */
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Animated Mesh Background --- */
+        .bg-visuals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 { background: var(--primary-glow); top: -10%; left: -10%; }
+        .blob-2 { background: var(--secondary-glow); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .blob-3 { background: #3b82f6; bottom: 20%; left: 30%; animation-delay: -10s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 100px) scale(1.2); }
+        }
+
+        /* --- Glassmorphism Card --- */
+        .login-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .login-card:hover {
+            transform: scale(1.01);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header UI */
+        .card-header {
+            background: transparent;
+            border: none;
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .card-header h2 {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            font-size: 1.75rem;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Input Styling */
+        .form-group { margin-bottom: 20px; position: relative; }
+
+        .input-group-custom {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-group-custom:focus-within {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .form-control-custom {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 14px 16px 14px 45px;
+            width: 100%;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .form-control-custom::placeholder { color: #64748b; }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            font-weight: 700;
+            margin-top: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Social Auth */
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 0; width: 100%; height: 1px;
+            background: var(--glass-border);
+            z-index: 1;
+        }
+        .divider span {
+            background: #1e293b;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-radius: 20px;
+        }
+
+        .social-buttons { display: flex; gap: 12px; }
+        .social-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Checkbox & Links */
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--text-muted); cursor: pointer; }
+        .remember-me input { accent-color: var(--primary-glow); }
+        .forgot-password a { color: var(--primary-glow); text-decoration: none; }
+
+        .register-link { text-align: center; margin-top: 25px; color: var(--text-muted); font-size: 0.9rem; }
+        .register-link a { color: white; font-weight: 700; text-decoration: none; margin-left: 5px; }
+
+        /* Alerts */
+        .alert-custom {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success { background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: #86efac; }
+
+        /* Validation Helper */
+        .invalid-feedback { font-size: 0.75rem; color: #f87171; margin-top: 5px; }
+        .is-invalid { border-color: #f87171 !important; }
+        
+        /* Particle styling override */
+        #particles { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+        .particle { position: absolute; background: rgba(255,255,255,0.2); border-radius: 50%; }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-visuals">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <div id="particles"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="card-header">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h2>Secure Login</h2>
+                <p>Welcome to the premium dashboard</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert-custom alert-{{ category }}">
+                <i class="fas fa-info-circle"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="/login" method="POST" id="loginForm">
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" name="email" id="email" class="form-control-custom"
+                            placeholder="Email address" value="{{ request.form.email if request.form else '' }}" required>
+                    </div>
+                    <div class="invalid-feedback" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password" id="password" class="form-control-custom"
+                            placeholder="Password" required>
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="invalid-feedback" id="passwordError"></div>
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember_me"> Remember me
+                    </label>
+                    <div class="forgot-password">
+                        <a href="#" onclick="showForgotPassword(); return false;">Forgot?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span>Sign In</span>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </form>
+
+            <div class="social-login">
+                <div class="divider"><span>Security Partners</span></div>
+                <div class="social-buttons">
+                    <a href="/login/google" class="social-btn">
+                        <i class="fab fa-google"></i> Google
+                    </a>
+                    <a href="#" class="social-btn" onclick="socialLogin('github')">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </div>
+            </div>
+
+            <div class="register-link">
+                Don't have an account?<a href="/register">Join now</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark border-secondary text-white" style="border-radius: 20px; backdrop-filter: blur(20px);">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Reset Access</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="email" id="resetEmail" class="form-control bg-transparent text-white border-secondary mb-3" placeholder="Enter your email">
+                    <button class="login-btn" onclick="sendResetLink()">Request Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth Particle Background
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 3 + 1;
+                p.style.width = p.style.height = `${size}px`;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.opacity = Math.random();
+                container.appendChild(p);
+                
+                // Simple float animation
+                animateParticle(p);
+            }
+        }
+
+        function animateParticle(p) {
+            let x = Math.random() * 2 - 1;
+            let y = Math.random() * 2 - 1;
+            setInterval(() => {
+                p.style.transform = `translate(${x}px, ${y}px)`;
+            }, 100);
+        }
+        createParticles();
+
+        // Password Toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwd.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form UX
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', (e) => {
+            const btn = document.getElementById('loginBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authenticating...';
+            btn.style.opacity = '0.7';
+        });
+
+        function showForgotPassword() {
+            new bootstrap.Modal(document.getElementById('forgotPasswordModal')).show();
+        }
+
+        function sendResetLink() {
+            alert('Reset link dispatched to secure email.');
+        }
+
+        function socialLogin(p) {
+            console.log('OAuth initiated for ' + p);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{% endblock %}

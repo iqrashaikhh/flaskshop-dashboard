@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Shop - Premium Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-glow: #8b5cf6;
+            --secondary-glow: #3b82f6;
+            --accent-pink: #ec4899;
+            --dark-bg: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* --- Animated Background Mesh --- */
+        .bg-mesh {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+        }
+
+        /* --- Smooth Glass Loader --- */
+        #loader {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .spinner {
+            width: 60px; height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.05);
+            border-top: 4px solid var(--primary-glow);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Premium Glass Navbar --- */
+        .navbar {
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(15, 23, 42, 0.7) !important;
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.25rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-muted) !important;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 50%;
+            width: 0; height: 2px;
+            background: var(--primary-glow);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .nav-link:hover::after { width: 80%; }
+
+        /* --- User Badge --- */
+        .user-badge {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--primary-glow) !important;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+        }
+
+        /* --- Content Area --- */
+        .main-container {
+            flex: 1;
+            padding-top: 120px;
+            padding-bottom: 60px;
+            z-index: 1;
+        }
+
+        /* --- Glass Alerts --- */
+        .alert {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert-success { border-color: rgba(34, 197, 94, 0.3); border-left: 4px solid #22c55e; }
+        .alert-danger { border-color: rgba(239, 68, 68, 0.3); border-left: 4px solid #ef4444; }
+
+        /* --- Modern Footer --- */
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        .footer-link-title {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-floating {
+            width: 44px; height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-floating:hover {
+            background: var(--primary-glow);
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            border-color: var(--primary-glow);
+        }
+
+        .footer-text-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: 0.3s;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-text-link:hover { color: var(--primary-glow); padding-left: 5px; }
+
+        /* --- Subscribe Form --- */
+        .form-control-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff !important;
+            border-radius: 12px;
+            padding: 12px 18px;
+        }
+
+        .form-control-glass:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            outline: none;
+        }
+
+        .btn-subscribe {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 25px;
+            transition: 0.3s;
+        }
+
+        .btn-subscribe:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .copyright-bar {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-mesh"></div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <div class="fw-bold" style="color: var(--text-muted); letter-spacing: 1px;">FLASKSHOP IS LOADING...</div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fa-solid fa-bolt-lightning me-2" style="color: var(--secondary-glow);"></i>FLASKSHOP
+            </a>
+
+            <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if session.get('user') %}
+                    <li class="nav-item me-3">
+                        <span class="user-badge">
+                            <i class="fa-regular fa-user-circle me-1"></i> {{ session.get('user') }}
+                        </span>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">
+                            Cart <i class="fa-solid fa-cart-shopping ms-1 small"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-danger btn-sm px-3 rounded-pill" href="/logout" style="font-weight: 600;">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/">Login</a></li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-subscribe btn-sm px-4" href="/register">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible fade show mb-4" role="alert">
+            <i class="fa-solid fa-circle-info me-2"></i> {{message}}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="content-wrapper">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer class="text-center text-lg-start">
+        <div class="container p-5">
+            <section class="mb-5 text-center">
+                <h5 class="footer-link-title">Connect With Us</h5>
+                <div class="d-flex justify-content-center gap-3">
+                    <a class="btn-floating" href="#!"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn-floating" href="#!"><i class="fab fa-twitter"></i></a>
+                    <a class="btn-floating" href="#!"><i class="fab fa-google"></i></a>
+                    <a class="btn-floating" href="#!"><i class="fab fa-instagram"></i></a>
+                    <a class="btn-floating" href="#!"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn-floating" href="#!"><i class="fab fa-github"></i></a>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-7 text-center">
+                        <h5 class="footer-link-title">Join Our Newsletter</h5>
+                        <p class="text-muted mb-4">Experience the premium side of e-commerce. Get curated updates weekly.</p>
+                        <form class="row g-2 justify-content-center">
+                            <div class="col-sm-8 col-12">
+                                <input type="email" class="form-control form-control-glass" placeholder="Email address">
+                            </div>
+                            <div class="col-sm-auto col-12">
+                                <button type="submit" class="btn btn-subscribe w-100">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <div class="row mt-4">
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <h5 class="text-uppercase fw-bold text-white mb-3">About FlaskShop</h5>
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Redefining the digital marketplace with cutting-edge technology and 
+                        a glassmorphism interface that feels as smooth as our backend.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 ms-auto">
+                    <h6 class="text-uppercase fw-bold text-white mb-3">Explore</h6>
+                    <ul class="list-unstyled">
+                        <li><a class="footer-text-link" href="#!">New Arrivals</a></li>
+                        <li><a class="footer-text-link" href="#!">Best Sellers</a></li>
+                        <li><a class="footer-text-link" href="#!">Discounts</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase fw-bold text-white mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li><a class="footer-text-link" href="#!">Help Center</a></li>
+                        <li><a class="footer-text-link" href="#!">Shipping</a></li>
+                        <li><a class="footer-text-link" href="#!">Returns</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center copyright-bar">
+            <span class="text-muted">© 2026 Crafted with ❤️ by</span>
+            <a class="text-white fw-bold text-decoration-none ms-1" href="#">FlaskShop.com</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.onload = function () {
+            const loader = document.getElementById("loader");
+            loader.style.opacity = "0";
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 600);
+        }
+    </script>
+</body>
+
+</html>

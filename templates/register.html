@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Create Your Account - Premium Access</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.125);
+            --primary-glow: #8b5cf6;
+            --secondary-glow: #ec4899;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a; /* Deep Midnight */
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Animated Mesh Background (Matches Login) --- */
+        .bg-visuals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 { background: var(--primary-glow); top: -5%; left: -5%; }
+        .blob-2 { background: var(--secondary-glow); bottom: -5%; right: -5%; animation-delay: -5s; }
+        .blob-3 { background: #3b82f6; top: 40%; right: 20%; animation-delay: -10s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* --- Glassmorphism Card --- */
+        .register-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .register-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 480px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header UI */
+        .card-header {
+            background: transparent;
+            border: none;
+            text-align: center;
+            padding-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            color: white;
+        }
+
+        .card-header h2 {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Input Styling */
+        .form-group { margin-bottom: 1.15rem; position: relative; }
+
+        .input-group-custom {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-group-custom:focus-within {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-control-custom {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 12px 16px 12px 45px;
+            width: 100%;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .form-control-custom::placeholder { color: #64748b; }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        /* Password Strength UI */
+        .password-strength { margin-top: 8px; }
+        .strength-bar {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .strength-progress { height: 100%; width: 0; transition: all 0.4s ease; }
+        .strength-text { font-size: 0.75rem; margin-top: 4px; font-weight: 600; }
+
+        /* Buttons */
+        .register-btn {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            font-weight: 700;
+            margin-top: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .register-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Terms Checkbox */
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .terms-checkbox input {
+            accent-color: var(--primary-glow);
+            width: 16px; height: 16px;
+        }
+
+        .terms-checkbox a { color: var(--primary-glow); text-decoration: none; font-weight: 600; }
+
+        /* Footer Link */
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 5px;
+            transition: color 0.2s;
+        }
+
+        .login-link a:hover { color: var(--primary-glow); }
+
+        /* Alerts */
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            backdrop-filter: blur(10px);
+        }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+        }
+
+        /* Validation UI */
+        .invalid-feedback { font-size: 0.75rem; color: #f87171; margin-top: 5px; display: none; }
+        .is-invalid { border-color: #f87171 !important; }
+        
+        #particles { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+        .bubble { position: absolute; background: rgba(255,255,255,0.1); border-radius: 50%; pointer-events: none; }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-visuals">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <div id="bubbles"></div>
+
+    <div class="register-wrapper">
+        <div class="register-card">
+            <div class="card-header">
+                <div class="logo-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2>Create Account</h2>
+                <p>Join the next generation platform</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} d-flex align-items-center mb-4 rounded-3" role="alert">
+                <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }} me-2"></i>
+                <div style="font-size: 0.85rem;">{{ message }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="/register" method="POST" id="registerForm" novalidate>
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" name="name" id="name" class="form-control-custom" placeholder="Full Name" required>
+                    </div>
+                    <div class="invalid-feedback" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" name="email" id="email" class="form-control-custom" placeholder="Email Address" required>
+                    </div>
+                    <div class="invalid-feedback" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password" id="password" class="form-control-custom" placeholder="Password" required>
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-progress" id="strengthProgress"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                    <div class="invalid-feedback" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group-custom">
+                        <i class="fas fa-shield-alt input-icon"></i>
+                        <input type="password" id="confirmPassword" class="form-control-custom" placeholder="Confirm Password" required>
+                    </div>
+                    <div class="invalid-feedback" id="confirmError"></div>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn">
+                    <span>Create Account</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ANIMATION LOGIC ---
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 40 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.opacity = Math.random() * 0.2;
+                bubblesContainer.appendChild(bubble);
+                
+                // Subtle drift
+                gsap_style_drift(bubble);
+            }
+        }
+        function gsap_style_drift(el) {
+            let x = (Math.random() - 0.5) * 50;
+            let y = (Math.random() - 0.5) * 50;
+            el.style.transition = "transform 10s ease-in-out";
+            setInterval(() => {
+                el.style.transform = `translate(${x}px, ${y}px)`;
+                x = (Math.random() - 0.5) * 50;
+                y = (Math.random() - 0.5) * 50;
+            }, 10000);
+        }
+        createBubbles();
+
+        // --- PASSWORD STRENGTH & LOGIC ---
+        const passwordInput = document.getElementById('password');
+        const strengthProgress = document.getElementById('strengthProgress');
+        const strengthText = document.getElementById('strengthText');
+
+        function checkPasswordStrength(password) {
+            let strength = 0; let message = ''; let color = '';
+            if (password.length === 0) return { strength: 0, message: '', color: 'transparent' };
+            if (password.length >= 6) strength++;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            switch (strength) {
+                case 0: case 1: message = 'Weakest'; color = '#ef4444'; break;
+                case 2: message = 'Weak'; color = '#f59e0b'; break;
+                case 3: message = 'Good'; color = '#8b5cf6'; break;
+                case 4: message = 'Strong'; color = '#10b981'; break;
+                case 5: message = 'Excellent'; color = '#10b981'; break;
+            }
+            return { strength, message, color };
+        }
+
+        passwordInput.addEventListener('input', function () {
+            const result = checkPasswordStrength(this.value);
+            strengthProgress.style.width = this.value.length > 0 ? `${(result.strength / 5) * 100}%` : '0';
+            strengthProgress.style.backgroundColor = result.color;
+            strengthText.textContent = result.message;
+            strengthText.style.color = result.color;
+        });
+
+        // Toggle visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form Loading State Simulation
+        const form = document.getElementById('registerForm');
+        form.addEventListener('submit', function() {
+            const btn = document.getElementById('registerBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}
